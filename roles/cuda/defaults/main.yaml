@@ -1,0 +1,8 @@
+cuda__deb_url: https://oss.roshan-ai.ir/repository/cuda-toolkit/cuda-repo-ubuntu2204-12-4-local_12.4.0-550.54.14-1_amd64.deb
+cuda__deb_local_path: "{{ ansible_env.HOME }}/cuda-repo-ubuntu2204-12-4-local_12.4.0-550.54.14-1_amd64.deb }}"
+cuda__envs:
+    - "export CUDA_HOME=/usr/local/cuda-12.4"
+    - "export PATH=$CUDA_HOME/bin:$PATH"
+    - "export LD_LIBRARY_PATH=$CUDA_HOME/lib64:$LD_LIBRARY_PATH"
+
+cuda__version: cuda-toolkit-12-4

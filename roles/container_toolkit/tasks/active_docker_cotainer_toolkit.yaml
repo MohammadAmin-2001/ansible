@@ -1,0 +1,21 @@
+---
+- name: check is docker installed or not.
+  command: docker --version
+  register: docker_status
+  ignore_errors: true
+  changed_when: false
+  tags: active_docker_ct
+
+
+- name: Configure NVIDIA runtime for Docker
+  command: nvidia-ctk runtime configure --runtime=docker
+  notify: restart docker
+  tags: active_docker_ct
+  when: docker_status.failed == False
+
+
+- name: Show docker status
+  debug:
+    msg: "docker status is {{ docker_status.stdout }}"
+  tags: active_docker_ct
+  

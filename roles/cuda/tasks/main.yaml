@@ -1,0 +1,29 @@
+---
+- name: downlaod cuda deb package frm remote link.
+  import_tasks: get_cuda_deb_package.yaml
+  tags: downlaod_cuda_deb
+  when: ansible_os_family == "Debian"
+
+- name: install cuda_deb.
+  import_tasks: install_cuda_deb.yaml
+  tags: install_cuda_deb
+  when: ansible_os_family == "Debian"
+
+- name: add cuda key.
+  import_tasks: add_cuda_key_files.yaml
+  tags: cuda_cuda_key
+  when: ansible_os_family == "Debian"
+
+- name: export cuda envs.
+  import_tasks: export_cuda_env.yaml.yaml
+  tags: export_cuda_env
+  when: ansible_os_family == "Debian"
+
+- name: install cuda toolkit.
+  import_tasks: install_cuda_toolkit.yaml
+  tags: install_cuda_toolkit
+  when: ansible_os_family == "Debian"
+
+    
+    
+  

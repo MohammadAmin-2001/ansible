@@ -1,0 +1,4 @@
+---
+- name: Reload .bashrc
+  shell: "source {{ ansible_env.HOME }}/.bashrc"
+  ignore_errors: yes

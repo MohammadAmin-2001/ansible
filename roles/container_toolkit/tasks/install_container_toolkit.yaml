@@ -1,0 +1,46 @@
+---
+- name: Install required packages.
+  retries: 5
+  delay: 10
+  ansible.builtin.apt:
+    name: "{{ item }}"
+    state: presentx
+  loop:
+    - "curl"
+    - "ca-certificates"
+  tags: install_dct, install_container_toolkit, install_ct
+
+- name: Add NVIDIA GPG key
+  ansible.builtin.shell: |
+   curl -fsSL https://nvidia.github.io/libnvidia-container/gpgkey \
+   | sudo gpg --dearmor -o /usr/share/keyrings/nvidia-container-toolkit-keyring.gpg
+  args:
+    creates: /usr/share/keyrings/nvidia-container-toolkit-keyring.gpg
+  tags: install_dct, install_container_toolkit, install_ct
+  
+- name: add NVIDIA Container Toolkit repository
+  ansible.builtin.shell: |
+    curl -s -L https://nvidia.github.io/libnvidia-container/stable/deb/nvidia-container-toolkit.list | \
+    sed 's#deb https://#deb [signed-by=/usr/share/keyrings/nvidia-container-toolkit-keyring.gpg] https://#g' | \
+    sudo tee /etc/apt/sources.list.d/nvidia-container-toolkit.list
+  args:
+   creates: /etc/apt/sources.list.d/nvidia-container-toolkit.list
+  tags: install_dct, install_container_toolkit, install_ct
+
+
+- name: Update package apt package manager.
+  ansible.builtin.apt:
+   update_cache: true
+  ignore_errors: true
+
+- name: Install Nvidia Container toolkit.
+  retries: 10
+  delay: 10
+  apt:
+   name: nvidia-container-toolkit
+  tags: install_dct, install_container_toolkit, install_ct
+
+    
+
+   
+    

@@ -1,0 +1,9 @@
+---
+- name: append cuda envs to bashrc file
+  ansible.builtin.lineinfile:
+    path: "{{ ansible_env.HOME }}/.bashrc"
+    state: present
+    line: "{{ item }}"
+  with_items: "{{ cuda__envs }}"
+  notify:
+    - Reload .bashrc

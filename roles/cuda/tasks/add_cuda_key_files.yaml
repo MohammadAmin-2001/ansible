@@ -1,0 +1,18 @@
+---
+- name: Find the CUDA key files
+  ansible.builtin.find:
+    paths: "/var/cuda-repo-ubuntu2204-12-4-local"
+    patterns: "cuda-*-keyring.gpg"
+  register: cuda_keys
+
+- name: Install the CUDA key files
+  ansible.builtin.copy:
+    src: "{{ item.path }}"
+    dest: "/usr/share/keyrings/"
+  with_items: "{{ cuda_keys.files }}"
+  register: copy_cuda_key
+
+- name: show Copy key info
+  ansible.builtin.debug:
+    msg: "{{ copy_cuda_key.msg }}"
+  when: copy_cuda_key.changed 

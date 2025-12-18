@@ -1,0 +1,29 @@
+---
+- name: "apt-get update"
+  ansible.builtin.apt:
+    update_cache: yes
+    cache_valid_time: 3600
+
+- name: Install  Cuda toolkit
+  ansible.builtin.apt:
+    name: "{{ cuda__version }}"
+    state: present
+  register: install_result
+  tags: inatall-cuda-toolkit
+
+- name: Prevent cuda toolkit from being upgraded
+  ansible.builtin.dpkg_selection:
+   name: "{{ cuda__version }}"
+   selection: hold
+  when: not install_result.failed
+
+- name: Check if the installation succeeded task failed
+  debug:
+    msg: "The previous task failed!"
+  when: install_result.failed
+
+- name: Check if the cuda installation succeeded
+  debug:
+    msg: "The previous task succeeded!"
+  when: not install_result.failed
+  

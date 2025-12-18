@@ -1,0 +1,10 @@
+---
+- name: install container toolkit
+  import_tasks: install_container_toolkit.yaml
+  tags: install_ct
+  when: ansible_os_family == "Debian"
+
+- name: config docker
+  import_tasks: active_docker_cotainer_toolkit.yaml
+  tags: active_docker_ct
+  when: ansible_os_family == "Debian"

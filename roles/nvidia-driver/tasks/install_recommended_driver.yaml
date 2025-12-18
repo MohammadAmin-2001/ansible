@@ -1,0 +1,33 @@
+---
+- name: Detect NVIDIA drivers available
+  ansible.builtin.command: ubuntu-drivers devices 
+  register: nvidia_devices  
+  changed_when: false 
+
+- name: Extract recommended driver version
+  ansible.builtin.set_fact:
+   recommended_gpu_driver: "{{ nvidia_devices.stdout | regex_search('nvidia-driver-[0-9]+.* recommended', ignorecase=True) | regex_replace('.*(nvidia-driver-[0-9]+).*', '\\1', ignorecase=True) }}"
+  when: driver__gpu_version is not defined or driver__gpu_version == "" 
+
+- name: Install NVIDIA driver(recommended)
+  ansible.builtin.apt:
+   name: "{{ recommended_gpu_driver }}"
+   state: present
+  when: recommended_gpu_driver is defined 
+
+- name: Install NVIDIA driver(specific Version)
+  ansible.builtin.apt:
+    name: "{{ driver__gpu_version }}"
+  when: driver__gpu_version is defined and driver__gpu_version != ""
+  
+- name: Prevent gpu driver from being upgraded(recommended)
+  ansible.builtin.dpkg_selection:
+   name: "{{ recommended_gpu_driver }}"
+   selection: hold
+  when: recommended_gpu_driver is defined
+
+- name: Prevent gpu driver from being upgraded(specific Version)
+  ansible.builtin.dpkg_selection:
+   name: "{{ driver__gpu_version }}"
+   selection: hold
+  when: driver__gpu_version is defined and driver__gpu_version != ""

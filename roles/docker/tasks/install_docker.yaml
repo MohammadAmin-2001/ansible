@@ -1,0 +1,39 @@
+---
+- name: install dependency
+  retry: 10
+  delay: 10
+  ansible.builtin.apt:
+    name: "{{ docker__dependencies }}"
+    state: present
+    update_cache: yes
+    update_cache_retries: 5
+    update_cache_retry_max_delay: 10
+    
+
+- name: give GPG key from docker
+  ansible.builtin.get_url:
+    url: "{{ docker__gpg_key_url }}"
+    dest: "{{ docker__gpg_system_path }}"
+    state: present
+    owner: "root"
+    user: "root"
+    mode: "644"
+  environment: "{{ proxy_env }}"
+
+- name: Add docker repo
+  ansible.legacy.copy:
+   src: docker.resources
+   dest: /etc/apt/sources.list.d
+   backup: 'yes'
+   mode: 0644
+   owner: root
+   group: root
+
+- name: Install Docker
+  retries: 20
+  delay: 15
+  ansible.builtin.apt:
+    name: "{{ docker__packages }}"
+    state: present
+  notify: start and enable docker
+  environment: "{{ proxy_env }}"

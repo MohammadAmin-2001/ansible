@@ -1,0 +1,15 @@
+---
+- name: Install CUDA .deb package using apt
+  ansible.builtin.apt:
+    deb: "{{ cuda__deb_local_path }}"
+    state: present
+  register: install_cuda_deb
+
+- name: Check if installation was successful
+  ansible.builtin.debug:
+    msg: "CUDA package installed successfully"
+  when: install_cuda_deb.changed
+
+
+
+

@@ -1,0 +1,12 @@
+---
+- name: "apt-get update"
+  retry: 10
+  delay: 10
+  ansible.builtin.apt:
+   update_cache: true
+   cache_valid_time: 3600
+        
+- name: Install ubuntu-drivers-common
+  ansible.builtin.apt:
+   name: ubuntu-drivers-common
+   state: present 

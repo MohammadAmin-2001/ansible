@@ -1,0 +1,11 @@
+---
+- hosts: localhost
+  become: true
+  gather_facts: yes
+  name: install pre_requirement for GPU base services.
+  roles:
+    - { role: nvidia-driver, become: True, tags: nvidia-driver}
+    - { role: cuda, become: True, tags: cuda}
+    - { role: docker, become: True, tags: docker}
+    - { role: container_toolkit, become: True, tags: ct}
+
